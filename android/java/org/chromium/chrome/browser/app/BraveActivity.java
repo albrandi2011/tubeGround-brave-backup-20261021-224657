@@ -371,6 +371,8 @@ public abstract class BraveActivity extends ChromeActivity
     // Genuine cold start vs an in-process recreation (e.g. foldable fold/unfold). Set once in
     // initializeState() and never mutated: several cold-start-only behaviors read it.
     private boolean mIsColdStart;
+    // Prevent the TubeGround startup redirect from running more than once.
+    private boolean mTubeGroundStartupHandled;
     // One-shot guard so the app-close shred notification fires at most once per cold start.
     private boolean mAppCloseShredTriggered;
 
@@ -401,6 +403,7 @@ public abstract class BraveActivity extends ChromeActivity
     @Override
     public void onResumeWithNative() {
         super.onResumeWithNative();
+        maybeOpenTubeGroundOnColdStart();
 
         BraveActivityJni.get().restartStatsUpdater();
         if (BraveVpnUtils.isVpnFeatureSupported(BraveActivity.this)) {
@@ -468,6 +471,27 @@ public abstract class BraveActivity extends ChromeActivity
         if (profile != null) {
             InAppPurchaseWrapper.getInstance()
                     .maybeShowSubscriptionInAppMessages(BraveActivity.this, profile);
+        }
+    }
+
+    /** Opens YouTube on a fresh launcher start, without replacing restored or external URLs. */
+    private void maybeOpenTubeGroundOnColdStart() {
+        if (mTubeGroundStartupHandled || !mIsColdStart) return;
+
+        Intent launchIntent = getIntent();
+        if (launchIntent == null
+                || !Intent.ACTION_MAIN.equals(launchIntent.getAction())
+                || launchIntent.getData() != null) {
+            return;
+        }
+
+        Tab tab = getActivityTab();
+        if (tab == null) return;
+
+        // Honor restored tabs and explicit navigation; only replace the new-tab page.
+        mTubeGroundStartupHandled = true;
+        if (UrlUtilities.isNtpUrl(tab.getUrl())) {
+            tab.loadUrl(new LoadUrlParams("https://www.youtube.com/"));
         }
     }
 
