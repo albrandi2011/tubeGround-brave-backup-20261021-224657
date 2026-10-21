@@ -292,16 +292,16 @@ If you update this file, be sure also to update google_chrome_strings.grd. -->
           </message>
         </then>
         <else>
-          <message name="IDS_PRODUCT_NAME" desc="The Brave application name" translateable="false">
-            Brave
+          <message name="IDS_PRODUCT_NAME" desc="The TubeGround application name" translateable="false">
+            TubeGround
           </message>
-          <message name="IDS_SHORT_PRODUCT_NAME" desc="The Brave application short name." translateable="false">
-            Brave
+          <message name="IDS_SHORT_PRODUCT_NAME" desc="The TubeGround application short name." translateable="false">
+            TubeGround
           </message>
         </else>
       </if>
-      <message name="IDS_APP_MENU_YOUR_CHROME_HEADER" desc="Header title for the Your Brave section in the main App Menu">
-        Your Brave
+      <message name="IDS_APP_MENU_YOUR_CHROME_HEADER" desc="Header title for the TubeGround section in the main App Menu">
+        TubeGround
       </message>
       <if expr="is_win">
         <message name="IDS_SXS_SHORTCUT_NAME">Brave Nightly</message>
